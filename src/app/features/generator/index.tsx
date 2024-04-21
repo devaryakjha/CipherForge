@@ -9,13 +9,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
-  Form,
-  FormControl,
   FormDescription,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
@@ -25,36 +20,78 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import useRunOnce from "@/app/shared/hooks/use_run_once";
 import Header from "@/app/shared/components/header";
-import FormSchema, { type FormSchemaPayload } from "@/lib/schema";
 import { switchFields } from "@/lib/switch_fields";
 import { CopyButton } from "./CopyButton";
+import { useReducer } from "react";
+import type { FormSchemaPayload } from "@/lib/schema";
 import generatePassword from "@/lib/generate-password";
 
-const PasswordGenerator = () => {
-  const form = useForm<FormSchemaPayload>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      password: "",
-      letters: true,
-      numbers: true,
-      punctuation: true,
-      length: 20,
-      mixedCase: true,
-    },
-  });
+const initialState: FormSchemaPayload = {
+  password: "",
+  letters: true,
+  numbers: true,
+  punctuation: true,
+  length: 20,
+  mixedCase: true,
+};
 
-  async function onSubmit(data: FormSchemaPayload) {
-    const newPassword = generatePassword(data);
-    form.setValue("password", newPassword);
+type Action =
+  | {
+      type: "letters" | "numbers" | "punctuation" | "mixedCase";
+      payload: {
+        data: boolean;
+      };
+    }
+  | {
+      type: "length";
+      payload: {
+        data: number;
+      };
+    }
+  | {
+      type: "submit";
+      payload: {
+        data: string;
+      };
+    };
+
+const reducer = (state: FormSchemaPayload, action: Action) => {
+  switch (action.type) {
+    case "letters":
+      return { ...state, letters: action.payload.data };
+    case "numbers":
+      return { ...state, numbers: action.payload.data };
+    case "punctuation":
+      return { ...state, punctuation: action.payload.data };
+    case "length":
+      return { ...state, length: action.payload.data };
+    case "mixedCase":
+      return { ...state, mixedCase: action.payload.data };
+    case "submit":
+      return { ...state, password: action.payload.data };
+    default:
+      return state;
+  }
+};
+
+const PasswordGenerator = () => {
+  const [form, dispatch] = useReducer(reducer, initialState);
+
+  async function onSubmit() {
+    const newPassword = generatePassword(form);
+    dispatch({
+      type: "submit",
+      payload: { data: newPassword },
+    });
   }
 
   function copyPassword() {
-    navigator.clipboard.writeText(form.getValues().password);
+    navigator.clipboard.writeText(form.password);
     toast.success("Password copied to clipboard");
   }
 
   useRunOnce(() => {
-    onSubmit(form.getValues());
+    onSubmit();
   });
 
   return (
@@ -68,91 +105,84 @@ const PasswordGenerator = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              onChange={() => onSubmit(form.getValues())}
-            >
-              <div className="grid w-full items-center gap-4">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  key="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        Password
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onSubmit(form.getValues())}
-                          aria-label="Generate new password"
-                        >
-                          <ReloadIcon />
-                        </Button>
-                      </FormLabel>
-                      <div className="flex w-full max-w-sm items-center space-x-2">
-                        <FormControl>
-                          <Input {...field} placeholder="Password" readOnly />
-                        </FormControl>
-                        <CopyButton copyPassword={copyPassword} />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="length"
-                  key="length"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Length</FormLabel>
-                      <FormControl>
-                        <Slider
-                          value={[field.value]}
-                          max={64}
-                          min={4}
-                          step={1}
-                          onValueChange={(value) => {
-                            field.onChange(value[0]);
-                          }}
-                          aria-label="Password length"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {field.value} characters
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {switchFields.map((data) => (
-                  <FormField
-                    control={form.control}
-                    name={data.name}
-                    key={data.name}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between">
-                        <div className="space-y-0.5">
-                          <FormLabel>{data.label}</FormLabel>
-                          <FormDescription>{data.description}</FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            aria-label={data["aria-label"]}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            onChange={onSubmit}
+          >
+            <div className="grid w-full items-center gap-4">
+              <FormItem>
+                <FormLabel
+                  className="flex items-center gap-2"
+                  htmlFor="password"
+                >
+                  Password
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Generate new password"
+                  >
+                    <ReloadIcon />
+                  </Button>
+                </FormLabel>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                  <Input
+                    type="text"
+                    value={form.password}
+                    id="password"
+                    placeholder="Password"
+                    readOnly
                   />
-                ))}
-              </div>
-            </form>
-          </Form>
+                  <CopyButton copyPassword={copyPassword} />
+                </div>
+                <FormMessage />
+              </FormItem>
+              <FormItem>
+                <FormLabel htmlFor="length">Length</FormLabel>
+                <Slider
+                  id="length"
+                  value={[form.length]}
+                  max={64}
+                  min={4}
+                  step={1}
+                  onValueChange={(value) => {
+                    dispatch({
+                      type: "length",
+                      payload: { data: value[0] },
+                    });
+                  }}
+                  aria-label="Password length"
+                />
+                <FormDescription>{form.length} characters</FormDescription>
+                <FormMessage />
+              </FormItem>
+              {switchFields.map((data) => (
+                <FormItem
+                  key={data.name}
+                  className="flex flex-row items-center justify-between"
+                >
+                  <div className="space-y-0.5">
+                    <FormLabel htmlFor={data.name}>{data.label}</FormLabel>
+                    <FormDescription>{data.description}</FormDescription>
+                  </div>
+                  <Switch
+                    id={data.name}
+                    checked={form[data.name]}
+                    onCheckedChange={(value) => {
+                      dispatch({
+                        type: data.name,
+                        payload: { data: value },
+                      });
+                    }}
+                    aria-label={data["aria-label"]}
+                  />
+                </FormItem>
+              ))}
+            </div>
+          </form>
         </CardContent>
       </Card>
     </main>
