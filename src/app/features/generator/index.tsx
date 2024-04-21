@@ -65,14 +65,7 @@ const PasswordGenerator = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      // password: generatePassword({
-      //   password: "",
-      //   letters: true,
-      //   numbers: true,
-      //   punctuation: true,
-      //   length: 20,
-      //   mixedCase: true,
-      // }),
+      password: "",
       letters: true,
       numbers: true,
       punctuation: true,
@@ -130,12 +123,7 @@ const PasswordGenerator = () => {
                       </FormLabel>
                       <div className="flex w-full max-w-sm items-center space-x-2">
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Password"
-                            disabled
-                            aria-disabled
-                          />
+                          <Input {...field} placeholder="Password" readOnly />
                         </FormControl>
                         <CopyButton copyPassword={copyPassword} />
                       </div>
@@ -158,10 +146,11 @@ const PasswordGenerator = () => {
                           onValueChange={(value) => {
                             field.onChange(value[0]);
                           }}
+                          aria-label="Password length"
                         />
                       </FormControl>
                       <FormDescription>
-                        {form.watch("length")} characters
+                        {field.value} characters
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -183,6 +172,7 @@ const PasswordGenerator = () => {
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Include letters"
                         />
                       </FormControl>
                     </FormItem>
@@ -214,6 +204,7 @@ const PasswordGenerator = () => {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={field.disabled}
+                          aria-label="Include mixed case"
                         />
                       </FormControl>
                     </FormItem>
@@ -233,6 +224,7 @@ const PasswordGenerator = () => {
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Include numbers"
                         />
                       </FormControl>
                     </FormItem>
@@ -254,6 +246,7 @@ const PasswordGenerator = () => {
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Include punctuation characters"
                         />
                       </FormControl>
                     </FormItem>
@@ -282,6 +275,7 @@ const CopyButton = ({ copyPassword }: { copyPassword: VoidFunction }) => {
         setTimeout(() => setCopied(false), 2000);
       }}
       type="button"
+      aria-label="Copy password to clipboard"
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
     </Button>
