@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title:
     "CipherForge - Free Password Generator Tool for Secure and Strong Passwords",
   description:
-    " Generate secure and strong passwords effortlessly with CipherForge. Our free online password generator tool ensures your accounts remain protected against cyber threats.",
+    "Generate secure and strong passwords effortlessly with CipherForge. Our free online password generator tool ensures your accounts remain protected against cyber threats.",
   keywords:
     "password generator, secure passwords, online tool, cybersecurity, password strength, random password, password security, password strength meter, CipherForge",
 };
@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased dark",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         {children}
