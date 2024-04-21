@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useState } from "react";
 import useRunOnce from "@/app/shared/hooks/use_run_once";
+import Header from "@/app/shared/components/header";
 
 const FormSchema = z.object({
   password: z.string().min(4).max(64),
@@ -90,6 +91,7 @@ const PasswordGenerator = () => {
 
   return (
     <main className={styles.main}>
+      <Header />
       <Card>
         <CardHeader>
           <CardTitle>Generate a password</CardTitle>
