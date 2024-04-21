@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { CopyIcon, CheckIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -29,41 +28,10 @@ import { toast } from "sonner";
 import { useState } from "react";
 import useRunOnce from "@/app/shared/hooks/use_run_once";
 import Header from "@/app/shared/components/header";
-
-const FormSchema = z.object({
-  password: z.string().min(4).max(64),
-  letters: z.boolean().default(true),
-  numbers: z.boolean().default(true),
-  punctuation: z.boolean().default(true),
-  length: z.number().default(20),
-  mixedCase: z.boolean().default(true),
-});
-
-const generatePassword = (data: z.infer<typeof FormSchema>) => {
-  const { letters, numbers, punctuation, length, mixedCase } = data;
-  const charset = [
-    { enabled: letters && !mixedCase, chars: "abcdefghijklmnopqrstuvwxyz" },
-    {
-      enabled: letters && mixedCase,
-      chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    },
-    { enabled: numbers, chars: "0123456789" },
-    { enabled: punctuation, chars: "!@#$%^&*()-_=+[]{}|;:,.<>?/" },
-  ]
-    .filter((item) => item.enabled)
-    .map((item) => item.chars)
-    .join("");
-
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    password += charset.charAt(Math.floor(Math.random() * charset.length));
-  }
-
-  return password;
-};
+import FormSchema, { type FormSchemaPayload } from "@/lib/schema";
 
 const PasswordGenerator = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<FormSchemaPayload>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       password: "",
@@ -75,8 +43,10 @@ const PasswordGenerator = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const newPassword = generatePassword(data);
+  async function onSubmit(data: FormSchemaPayload) {
+    const newPassword = await import("@/lib/generate-password").then((mod) =>
+      mod.default(data),
+    );
     form.setValue("password", newPassword);
   }
 
