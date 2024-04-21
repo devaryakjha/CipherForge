@@ -175,7 +175,9 @@ const PasswordGenerator = () => {
                     <FormItem className="flex flex-row items-center justify-between">
                       <div className="space-y-0.5">
                         <FormLabel>Letters</FormLabel>
-                        <FormDescription>Include letters</FormDescription>
+                        <FormDescription>
+                          Include letters (only lowercase)
+                        </FormDescription>
                       </div>
                       <FormControl>
                         <Switch
