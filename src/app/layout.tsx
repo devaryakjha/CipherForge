@@ -43,8 +43,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-svh bg-background font-sans antialiased",
-          fontSans.variable
+          "min-h-svh bg-background font-sans antialiased px-4",
+          fontSans.variable,
         )}
       >
         <ThemeProvider
