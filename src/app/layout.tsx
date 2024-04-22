@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { BASE_URL } from "@/lib/constants";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -11,12 +12,26 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  metadataBase: new URL(BASE_URL),
+  applicationName: "CipherForge",
   title:
     "CipherForge - Free Password Generator Tool for Secure and Strong Passwords",
   description:
     "Generate secure and strong passwords effortlessly with CipherForge. Our free online password generator tool ensures your accounts remain protected against cyber threats.",
   keywords:
     "password generator, secure passwords, online tool, cybersecurity, password strength, random password, password security, password strength meter, CipherForge",
+  openGraph: {
+    title:
+      "CipherForge - Free Password Generator Tool for Secure and Strong Passwords",
+    description:
+      "Generate secure and strong passwords effortlessly with CipherForge. Our free online password generator tool ensures your accounts remain protected against cyber threats.",
+    url: "/",
+    siteName: "CipherForge",
+    countryName: "India",
+    locale: "en_IN",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +44,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-svh bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <ThemeProvider
