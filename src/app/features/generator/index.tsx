@@ -26,6 +26,7 @@ import { useReducer } from "react";
 import type { FormSchemaPayload } from "@/lib/schema";
 import generatePassword from "@/lib/generate-password";
 import { cn } from "@/lib/utils";
+import Footer from "@/app/shared/components/footer";
 
 const initialState: FormSchemaPayload = {
   password: "",
@@ -98,7 +99,7 @@ const PasswordGenerator = () => {
   return (
     <main className={"flex flex-col items-center justify-center h-svh"}>
       <Header />
-      <Card>
+      <Card className="z-10">
         <CardHeader>
           <CardTitle>Generate a password</CardTitle>
           <CardDescription>
@@ -191,6 +192,7 @@ const PasswordGenerator = () => {
           </form>
         </CardContent>
       </Card>
+      <Footer />
     </main>
   );
 };
