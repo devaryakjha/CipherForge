@@ -34,9 +34,8 @@
 ---
 
 <p float="left">
-    <img src="https://github.com/devaryakjha/varanasi_mobile_app/blob/main/assets/screenshots/2.PNG" width="200" />  
-    <img src="https://github.com/devaryakjha/varanasi_mobile_app/blob/main/assets/screenshots/5.PNG" width="200" />  
-    <img src="https://github.com/devaryakjha/varanasi_mobile_app/blob/main/assets/screenshots/14.PNG" width="200" />
+    ![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/dark.jpeg#gh-dark-mode-only)
+    ![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/light.jpeg#gh-light-mode-only)
 </p>
 
 <h3 align="center">Do you like the project? Sponsor it! :heartpulse:	</h3>
