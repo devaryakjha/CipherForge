@@ -25,6 +25,7 @@ import { CopyButton } from "./CopyButton";
 import { useReducer } from "react";
 import type { FormSchemaPayload } from "@/lib/schema";
 import generatePassword from "@/lib/generate-password";
+import { cn } from "@/lib/utils";
 
 const initialState: FormSchemaPayload = {
   password: "",
@@ -159,10 +160,13 @@ const PasswordGenerator = () => {
                 <FormDescription>{form.length} characters</FormDescription>
                 <FormMessage />
               </FormItem>
-              {switchFields.map((data) => (
+              {switchFields(form).map((data) => (
                 <FormItem
                   key={data.name}
-                  className="flex flex-row items-center justify-between"
+                  className={cn("flex flex-row items-center justify-between", {
+                    "opacity-50": data.disabled,
+                  })}
+                  aria-disabled={data.disabled}
                 >
                   <div className="space-y-0.5">
                     <FormLabel htmlFor={data.name}>{data.label}</FormLabel>
@@ -178,6 +182,8 @@ const PasswordGenerator = () => {
                       });
                     }}
                     aria-label={data["aria-label"]}
+                    disabled={data.disabled}
+                    aria-disabled={data.disabled}
                   />
                 </FormItem>
               ))}
