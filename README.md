@@ -33,10 +33,8 @@
 
 ---
 
-<p float="left">
-    ![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/dark.jpeg#gh-dark-mode-only)
-    ![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/light.jpeg#gh-light-mode-only)
-</p>
+![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/dark.jpeg#gh-dark-mode-only)
+![App Screenshot](https://raw.githubusercontent.com/devaryakjha/CipherForge/master/assets/light.jpeg#gh-light-mode-only)
 
 <h3 align="center">Do you like the project? Sponsor it! :heartpulse:	</h3>
 
